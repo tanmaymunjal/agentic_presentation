@@ -1,6 +1,7 @@
 import discord
-from agent import invoke_agent
+from google_search import invoke_agent
 from config import global_config
+from google_jobs import invoke_agent_google_jobs
 
 DISCORD_MAX_MESSAGE_LENGTH = 2000
 # Define the intents your bot will use
@@ -29,11 +30,15 @@ async def on_message(message):
     if message.content.startswith("!query:"):
         query = message.content.split("!query:")[1].strip()
         answer = invoke_agent(query)
-        i = 0
-        while i < len(answer):
-            send_message = answer[i : i + DISCORD_MAX_MESSAGE_LENGTH]
-            await message.channel.send(send_message)
-            i += DISCORD_MAX_MESSAGE_LENGTH
+    if message.content.startswith("!jobs:"):
+        query = message.content.split("!jobs:")[1].strip()
+        answer = invoke_agent_google_jobs(query)
+
+    i = 0
+    while i < len(answer):
+        send_message = answer[i : i + DISCORD_MAX_MESSAGE_LENGTH]
+        await message.channel.send(send_message)
+        i += DISCORD_MAX_MESSAGE_LENGTH
 
 
 # Run the bot with the token
